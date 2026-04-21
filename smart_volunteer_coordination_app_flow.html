@@ -1,0 +1,250 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body{font-family:var(--font-sans)}
+.tabs{display:flex;gap:6px;padding:16px 16px 0;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);font-size:13px;cursor:pointer;background:transparent;color:var(--color-text-secondary);transition:all .15s}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent;font-weight:500}
+.tab:hover:not(.active){background:var(--color-background-secondary)}
+.canvas{padding:20px 16px 24px;overflow-x:auto}
+svg{display:block}
+.node{cursor:pointer}
+.node:hover rect,.node:hover ellipse{opacity:.85}
+.detail-panel{margin:0 16px 20px;padding:14px 16px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-info);background:var(--color-background-info);font-size:13px;color:var(--color-text-primary);display:none}
+.detail-panel.show{display:block}
+.detail-panel strong{color:var(--color-text-info);font-weight:500}
+.detail-title{font-weight:500;font-size:14px;color:var(--color-text-info);margin-bottom:6px}
+.detail-list{list-style:none;display:flex;flex-direction:column;gap:3px}
+.detail-list li::before{content:"→ ";color:var(--color-text-info)}
+.legend{display:flex;gap:16px;padding:0 16px 16px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+</style>
+<h2 class="sr-only">App and website user flow for the Smart Volunteer Coordination System, showing journeys for three roles: NGO Coordinator, Volunteer, and Funder/Admin.</h2>
+<div class="tabs">
+  <button class="tab active" onclick="show('coordinator')">NGO Coordinator</button>
+  <button class="tab" onclick="show('volunteer')">Volunteer</button>
+  <button class="tab" onclick="show('funder')">Funder / Admin</button>
+</div>
+<div class="canvas">
+  <svg id="svg-coordinator" width="100%" viewBox="0 0 680 620" role="img">
+    <title>NGO Coordinator flow</title>
+    <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <!-- start -->
+    <g class="node" onclick="detail('Login / sign up','Organization signs in via email or SSO. New NGOs register and verify their organization profile.',['Enter org credentials','MFA verification','Select role: Coordinator'])">
+      <ellipse cx="340" cy="36" rx="72" ry="22" fill="#185FA5" opacity=".15" stroke="#185FA5" stroke-width="1"/>
+      <text x="340" y="40" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Login / sign up</text>
+    </g>
+    <line x1="340" y1="58" x2="340" y2="82" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- dashboard -->
+    <g class="node" onclick="detail('Coordinator dashboard','Central hub showing live supply vs. demand map, task fill rates, and volunteer engagement metrics.',['Needs map (GIS layer)','Urgent tasks widget','Volunteer availability heatmap','Quick-assign button'])">
+      <rect x="220" y="86" width="240" height="52" rx="8" fill="#0F6E56" opacity=".12" stroke="#0F6E56" stroke-width="1"/>
+      <text x="340" y="108" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#0F6E56">Coordinator dashboard</text>
+      <text x="340" y="126" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0F6E56" opacity=".8">Live needs map · fill rate · alerts</text>
+    </g>
+    <!-- arrows from dashboard -->
+    <line x1="270" y1="138" x2="170" y2="186" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <line x1="340" y1="138" x2="340" y2="186" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <line x1="410" y1="138" x2="510" y2="186" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- col 1: needs -->
+    <g class="node" onclick="detail('Submit community need','Coordinators add new tasks or import batches. The system scores urgency automatically.',['Select need type (food/medical/education)','Set location on map','Add required skills & volunteer count','Set urgency: high / medium / low','Batch import via CSV'])">
+      <rect x="80" y="190" width="180" height="52" rx="8" fill="#BA7517" opacity=".12" stroke="#BA7517" stroke-width="1"/>
+      <text x="170" y="212" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#BA7517">Submit community need</text>
+      <text x="170" y="230" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#BA7517" opacity=".8">Map pin · skills · urgency</text>
+    </g>
+    <!-- col 2: matching -->
+    <g class="node" onclick="detail('Needs priority queue','Ranked list of open community needs. Algorithm scores by urgency, vulnerability, and resource gap.',['Weighted scoring engine','Filter by area / sector','Override urgency manually','Mark as fulfilled'])">
+      <rect x="250" y="190" width="180" height="52" rx="8" fill="#185FA5" opacity=".12" stroke="#185FA5" stroke-width="1"/>
+      <text x="340" y="212" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Needs priority queue</text>
+      <text x="340" y="230" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#185FA5" opacity=".8">Score · rank · filter</text>
+    </g>
+    <!-- col 3: volunteers -->
+    <g class="node" onclick="detail('Volunteer search','Search volunteer database by skill, language, distance, and availability.',['Filter: skill tags','Filter: availability window','Filter: distance radius','View volunteer profile card','Send invitation'])">
+      <rect x="420" y="190" width="180" height="52" rx="8" fill="#533AB7" opacity=".12" stroke="#533AB7" stroke-width="1"/>
+      <text x="510" y="212" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#533AB7">Volunteer search</text>
+      <text x="510" y="230" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#533AB7" opacity=".8">Skills · distance · availability</text>
+    </g>
+    <!-- arrows to match engine -->
+    <line x1="170" y1="242" x2="240" y2="298" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <line x1="340" y1="242" x2="340" y2="298" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <line x1="510" y1="242" x2="440" y2="298" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- match engine -->
+    <g class="node" onclick="detail('Matching engine','Hybrid algorithm pairs volunteers to tasks. Runs in real-time or batch mode.',['Rule-based hard filter (skills + availability)','ML ranking by compatibility score','Fairness reranking for underserved NGOs','Show top-K candidates per task','One-click assign or suggest'])">
+      <rect x="200" y="302" width="280" height="52" rx="8" fill="#993C1D" opacity=".12" stroke="#993C1D" stroke-width="1"/>
+      <text x="340" y="324" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#993C1D">Matching engine</text>
+      <text x="340" y="342" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#993C1D" opacity=".8">Rule-based + ML + fairness reranking</text>
+    </g>
+    <!-- arrow to schedule -->
+    <line x1="340" y1="354" x2="340" y2="398" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- scheduling -->
+    <g class="node" onclick="detail('Scheduling & assignment','Calendar view to assign volunteers to shifts. Handles constraints and conflicts.',['Drag-and-drop shift builder','Conflict detection (max hours/rest)','Google Calendar sync','Send confirmation to volunteer','Bulk assign for large events'])">
+      <rect x="220" y="402" width="240" height="52" rx="8" fill="#0F6E56" opacity=".12" stroke="#0F6E56" stroke-width="1"/>
+      <text x="340" y="424" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#0F6E56">Scheduling & assignment</text>
+      <text x="340" y="442" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0F6E56" opacity=".8">Calendar · conflicts · bulk assign</text>
+    </g>
+    <!-- branch to notify and track -->
+    <line x1="290" y1="454" x2="200" y2="498" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <line x1="390" y1="454" x2="480" y2="498" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr)"/>
+    <!-- notify -->
+    <g class="node" onclick="detail('Notifications','Multi-channel alerts keep volunteers and NGOs in sync.',['SMS · email · push per preference','Assignment confirmation','24 h reminder before shift','Cancellation / change alerts','Two-way thread for coordinators'])">
+      <rect x="100" y="502" width="190" height="52" rx="8" fill="#185FA5" opacity=".12" stroke="#185FA5" stroke-width="1"/>
+      <text x="195" y="524" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Notifications</text>
+      <text x="195" y="542" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#185FA5" opacity=".8">SMS · email · push · threads</text>
+    </g>
+    <!-- impact -->
+    <g class="node" onclick="detail('Impact tracking','After task completion, log outcomes and view aggregated dashboards.',['Volunteer submits timesheet','NGO confirms completion','Log beneficiaries served / outcomes','View impact report by project or region','Export for funder reports'])">
+      <rect x="390" y="502" width="190" height="52" rx="8" fill="#3B6D11" opacity=".12" stroke="#3B6D11" stroke-width="1"/>
+      <text x="485" y="524" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#3B6D11">Impact tracking</text>
+      <text x="485" y="542" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#3B6D11" opacity=".8">Timesheet · outcomes · reports</text>
+    </g>
+    <!-- feedback loop arrows back to dashboard (curved) -->
+    <path d="M100 502 Q40 400 220 138" fill="none" stroke="var(--color-border-tertiary)" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+    <text x="48" y="340" font-size="10" fill="var(--color-text-tertiary)" text-anchor="middle">feedback</text>
+    <text x="48" y="352" font-size="10" fill="var(--color-text-tertiary)" text-anchor="middle">loop</text>
+  </svg>
+  <svg id="svg-volunteer" width="100%" viewBox="0 0 680 560" style="display:none" role="img">
+    <title>Volunteer flow</title>
+    <defs><marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <!-- onboard -->
+    <g class="node" onclick="detail('Register & onboard','New volunteers create a profile with skills, availability, and preferences.',['Name, contact, location','Skill tags (teaching, first aid, driving…)','Language(s) spoken','Certifications upload','Availability schedule (weekly recurring)','Consent & GDPR agreement'])">
+      <ellipse cx="340" cy="36" rx="90" ry="22" fill="#185FA5" opacity=".15" stroke="#185FA5" stroke-width="1"/>
+      <text x="340" y="40" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Register & onboard</text>
+    </g>
+    <line x1="340" y1="58" x2="340" y2="84" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr2)"/>
+    <!-- home feed -->
+    <g class="node" onclick="detail('Volunteer home feed','Personalised list of nearby open tasks matching skills and availability.',['Cards sorted by match score & distance','Filter: category / date / distance','Map view toggle','Saved/bookmarked tasks','Notification badge for new matches'])">
+      <rect x="210" y="88" width="260" height="52" rx="8" fill="#0F6E56" opacity=".12" stroke="#0F6E56" stroke-width="1"/>
+      <text x="340" y="110" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#0F6E56">Volunteer home feed</text>
+      <text x="340" y="128" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0F6E56" opacity=".8">Matched tasks · map · filters</text>
+    </g>
+    <line x1="340" y1="140" x2="340" y2="184" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr2)"/>
+    <!-- task detail -->
+    <g class="node" onclick="detail('Task detail page','Full view of a community need before signing up.',['Organization name & badge','Task description & required skills','Start / end time & location map','Volunteer slots remaining','Sign-up button · add to calendar'])">
+      <rect x="210" y="188" width="260" height="52" rx="8" fill="#BA7517" opacity=".12" stroke="#BA7517" stroke-width="1"/>
+      <text x="340" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#BA7517">Task detail page</text>
+      <text x="340" y="228" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#BA7517" opacity=".8">Description · map · slots · sign-up</text>
+    </g>
+    <!-- branch: sign up or skip -->
+    <line x1="290" y1="240" x2="190" y2="284" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr2)"/>
+    <line x1="390" y1="240" x2="490" y2="284" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr2)"/>
+    <text x="210" y="274" text-anchor="middle" font-size="11" fill="var(--color-text-tertiary)">sign up</text>
+    <text x="470" y="274" text-anchor="middle" font-size="11" fill="var(--color-text-tertiary)">skip</text>
+    <!-- confirm -->
+    <g class="node" onclick="detail('Confirm & schedule','Volunteer confirms availability and receives assignment details.',['Confirm time slot','View coordinator contact','Add to phone calendar','Receive confirmation SMS/push','Task appears in My Assignments'])">
+      <rect x="90" y="288" width="200" height="52" rx="8" fill="#533AB7" opacity=".12" stroke="#533AB7" stroke-width="1"/>
+      <text x="190" y="310" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#533AB7">Confirm & schedule</text>
+      <text x="190" y="328" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#533AB7" opacity=".8">Slot confirm · calendar · SMS</text>
+    </g>
+    <!-- skip back to feed -->
+    <g class="node" onclick="detail('Browse more tasks','Volunteer continues browsing or edits preferences.',['Return to filtered feed','Update skill tags','Adjust availability window','Bookmark task for later'])">
+      <rect x="390" y="288" width="200" height="52" rx="8" fill="#5F5E5A" opacity=".1" stroke="var(--color-border-secondary)" stroke-width="1"/>
+      <text x="490" y="310" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="var(--color-text-secondary)">Browse more tasks</text>
+      <text x="490" y="328" text-anchor="middle" dominant-baseline="central" font-size="11" fill="var(--color-text-tertiary)">Filter · bookmark · update prefs</text>
+    </g>
+    <path d="M490 288 Q560 240 470 140" fill="none" stroke="var(--color-border-tertiary)" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+    <!-- pre-task reminder -->
+    <line x1="190" y1="340" x2="190" y2="384" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr2)"/>
+    <g class="node" onclick="detail('Pre-task reminder','24-hour and 1-hour automated reminders with key logistics.',['Push / SMS alert','Task address + directions link','Coordinator contact','Checklist: what to bring','Cancel / request reschedule'])">
+      <rect x="90" y="388" width="200" height="52" rx="8" fill="#185FA5" opacity=".12" stroke="#185FA5" stroke-width="1"/>
+      <text x="190" y="410" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Pre-task reminder</text>
+      <text x="190" y="428" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#185FA5" opacity=".8">24 h · 1 h · directions · cancel</text>
+    </g>
+    <line x1="190" y1="440" x2="190" y2="484" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr2)"/>
+    <!-- log hours -->
+    <g class="node" onclick="detail('Log hours & feedback','After the shift, volunteer confirms attendance and submits a rating.',['Check in on arrival (GPS or QR)','Log actual hours worked','Rate the experience (1-5)','Optional comment for NGO','Badge / hours added to profile'])">
+      <rect x="90" y="488" width="200" height="52" rx="8" fill="#3B6D11" opacity=".12" stroke="#3B6D11" stroke-width="1"/>
+      <text x="190" y="510" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#3B6D11">Log hours & feedback</text>
+      <text x="190" y="528" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#3B6D11" opacity=".8">Check-in · rating · badge earned</text>
+    </g>
+    <!-- profile update arrow -->
+    <path d="M190 488 Q110 420 130 88" fill="none" stroke="var(--color-border-tertiary)" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+    <text x="82" y="310" font-size="10" fill="var(--color-text-tertiary)" text-anchor="middle">profile</text>
+    <text x="82" y="322" font-size="10" fill="var(--color-text-tertiary)" text-anchor="middle">updated</text>
+  </svg>
+  <svg id="svg-funder" width="100%" viewBox="0 0 680 440" style="display:none" role="img">
+    <title>Funder / Admin flow</title>
+    <defs><marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <g class="node" onclick="detail('Login (funder / admin)','Secure login with MFA. Funders get read-only dashboards; admins get full system access.',['Email + MFA','Role: Funder (read-only) or Admin (full)','Session timeout policy'])">
+      <ellipse cx="340" cy="36" rx="100" ry="22" fill="#185FA5" opacity=".15" stroke="#185FA5" stroke-width="1"/>
+      <text x="340" y="40" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Login (funder / admin)</text>
+    </g>
+    <line x1="340" y1="58" x2="340" y2="84" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <g class="node" onclick="detail('Impact dashboard','High-level KPIs across all projects and regions.',['Volunteer-hours deployed (total & trend)','Tasks completed / fill rate','Beneficiaries reached','Geographic coverage map','Cost-per-outcome estimate'])">
+      <rect x="200" y="88" width="280" height="52" rx="8" fill="#0F6E56" opacity=".12" stroke="#0F6E56" stroke-width="1"/>
+      <text x="340" y="110" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#0F6E56">Impact dashboard</text>
+      <text x="340" y="128" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0F6E56" opacity=".8">KPIs · map · trends · cost-per-outcome</text>
+    </g>
+    <line x1="260" y1="140" x2="170" y2="184" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <line x1="340" y1="140" x2="340" y2="184" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <line x1="420" y1="140" x2="510" y2="184" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <g class="node" onclick="detail('Drill-down reports','Filter impact metrics by project, region, NGO, or time period.',['Select date range','Filter by NGO / project / district','Table: hours per task type','Chart: beneficiaries over time','Export CSV / PDF'])">
+      <rect x="60" y="188" width="210" height="52" rx="8" fill="#185FA5" opacity=".12" stroke="#185FA5" stroke-width="1"/>
+      <text x="165" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#185FA5">Drill-down reports</text>
+      <text x="165" y="228" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#185FA5" opacity=".8">Filter · chart · export PDF/CSV</text>
+    </g>
+    <g class="node" onclick="detail('A/B test & analytics','Compare matching algorithms and notification strategies.',['Fairness A/B test results','% NGOs receiving volunteers','Notification channel response rates','Match efficiency metrics','Re-run experiments'])">
+      <rect x="235" y="188" width="210" height="52" rx="8" fill="#BA7517" opacity=".12" stroke="#BA7517" stroke-width="1"/>
+      <text x="340" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#BA7517">A/B test & analytics</text>
+      <text x="340" y="228" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#BA7517" opacity=".8">Algorithm fairness · channel tests</text>
+    </g>
+    <g class="node" onclick="detail('System admin (admin only)','Full system configuration and governance controls.',['Manage NGO accounts & permissions','GDPR: data deletion requests','Consent log audit trail','Retention policy enforcement','Security audit log viewer','Algorithm parameter tuning'])">
+      <rect x="410" y="188" width="210" height="52" rx="8" fill="#993C1D" opacity=".12" stroke="#993C1D" stroke-width="1"/>
+      <text x="515" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#993C1D">System admin</text>
+      <text x="515" y="228" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#993C1D" opacity=".8">GDPR · accounts · audit log</text>
+    </g>
+    <line x1="165" y1="240" x2="165" y2="300" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <line x1="340" y1="240" x2="340" y2="300" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <line x1="515" y1="240" x2="515" y2="300" stroke="var(--color-border-secondary)" stroke-width="1" marker-end="url(#arr3)"/>
+    <g class="node" onclick="detail('Export & share','Generate shareable reports for board meetings, grant applications, or public disclosures.',['One-click PDF impact report','Funder-facing summary view','Scheduled monthly email digest','Public dashboard URL (optional)'])">
+      <rect x="60" y="304" width="210" height="52" rx="8" fill="#3B6D11" opacity=".12" stroke="#3B6D11" stroke-width="1"/>
+      <text x="165" y="326" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#3B6D11">Export & share</text>
+      <text x="165" y="344" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#3B6D11" opacity=".8">PDF · email digest · public URL</text>
+    </g>
+    <g class="node" onclick="detail('KPI alerts','Automated alerts when key metrics drop below thresholds.',['Task fill rate < 80% → alert coordinator','Volunteer retention drop → notify admin','New urgent need with no match → escalate','Weekly digest to funder email'])">
+      <rect x="235" y="304" width="210" height="52" rx="8" fill="#533AB7" opacity=".12" stroke="#533AB7" stroke-width="1"/>
+      <text x="340" y="326" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#533AB7">KPI alerts</text>
+      <text x="340" y="344" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#533AB7" opacity=".8">Threshold triggers · escalation</text>
+    </g>
+    <g class="node" onclick="detail('Data governance panel','GDPR controls, data retention, and consent management.',['View / export volunteer consent log','Process deletion requests','Set retention periods (default 7 yr)','Role permission matrix','Anonymise exports for public reports'])">
+      <rect x="410" y="304" width="210" height="52" rx="8" fill="#534AB7" opacity=".12" stroke="#534AB7" stroke-width="1"/>
+      <text x="515" y="326" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#534AB7">Data governance</text>
+      <text x="515" y="344" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#534AB7" opacity=".8">Consent · deletion · retention</text>
+    </g>
+    <!-- all feed back to dashboard -->
+    <path d="M165 356 Q100 390 200 140" fill="none" stroke="var(--color-border-tertiary)" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arr3)"/>
+    <path d="M515 356 Q580 390 480 140" fill="none" stroke="var(--color-border-tertiary)" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#arr3)"/>
+  </svg>
+</div>
+<div class="detail-panel" id="detail">
+  <div class="detail-title" id="d-title"></div>
+  <p id="d-desc" style="margin-bottom:8px;font-size:13px;color:var(--color-text-secondary);line-height:1.5"></p>
+  <ul class="detail-list" id="d-list"></ul>
+</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#185FA5;opacity:.7"></div>Core screens</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#0F6E56;opacity:.7"></div>Dashboard / tracking</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#BA7517;opacity:.7"></div>Data input / needs</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#533AB7;opacity:.7"></div>Matching / scheduling</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#993C1D;opacity:.7"></div>Engine / admin</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3B6D11;opacity:.7"></div>Impact / reporting</div>
+  <div class="legend-item" style="gap:8px"><span style="font-size:11px;color:var(--color-text-tertiary)">- - -</span>Feedback loop</div>
+</div>
+<script>
+function show(role){
+  ['coordinator','volunteer','funder'].forEach(r=>{
+    document.getElementById('svg-'+r).style.display=r===role?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active',['coordinator','volunteer','funder'][i]===role);
+  });
+  document.getElementById('detail').classList.remove('show');
+}
+function detail(title,desc,items){
+  document.getElementById('d-title').textContent=title;
+  document.getElementById('d-desc').textContent=desc;
+  var ul=document.getElementById('d-list');
+  ul.innerHTML=items.map(i=>'<li>'+i+'</li>').join('');
+  document.getElementById('detail').classList.add('show');
+}
+</script>
